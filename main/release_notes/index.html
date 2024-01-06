@@ -230,7 +230,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../api/minari_dataset/episode_data/">EpisodeData</a></li>
 </ul>
 </li>
-<li class="toctree-l1 has-children"><a class="reference internal" href="../api/data_collector/">DataCollectorV0</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of DataCollectorV0</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../api/data_collector/">DataCollector</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of DataCollector</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../api/data_collector_callbacks/step_data_callback/">StepDataCallback</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../api/data_collector_callbacks/episode_metadata_callback/">EpisodeMetadataCallback</a></li>
 </ul>
@@ -366,7 +366,7 @@
           </div>
           <article role="main">
             
-            <section id="release-notes">
+            <section class="tex2jax_ignore mathjax_ignore" id="release-notes">
 <h1>Release Notes<a class="headerlink" href="#release-notes" title="Link to this heading">#</a></h1>
 <section id="release-v0-4-2">
 <h2>v0.4.2<a class="headerlink" href="#release-v0-4-2" title="Link to this heading">#</a></h2>
@@ -623,7 +623,7 @@
 <p>We are constantly developing this library. Please don't hesitate to open a GitHub issue or reach out to us directly. Your ideas and contributions are highly appreciated and will help shape the future of this library. Thank you for using our library!</p>
 <h2>New Features and Improvements</h2>
 <h3>Dataset File Format</h3>
-<p>We are keeping the <a href="https://www.hdfgroup.org/solutions/hdf5/" rel="nofollow">HDF5</a> file format to store the Minari datasets. However, the internal structure of the datasets has been modified. The data is now stored in a per episode basis. Each Minari dataset has a minimum of one HDF5 file (📄, <code>main_data.hdf5</code>). In the dataset file,  the collected transitions are separated by episode groups (📁) that contain 5 required datasets(💾) : <code>observations</code>, <code>actions</code>, <code>terminations</code>, <code>truncations</code>, and <code>rewards</code>. Other optional group and dataset collections can be included in each episode; such is the case of the <code>infos</code> step return. This structure allows us to store <a href="https://minari.farama.org/main/content/dataset_standards/#default-dataset-metadata" rel="nofollow">metadata</a> for each episode.</p>
+<p>We are keeping the <a href="https://www.hdfgroup.org/solutions/hdf5/" rel="nofollow">HDF5</a> file format to store the Minari datasets. However, the internal structure of the datasets has been modified. The data is now stored in a per episode basis. Each Minari dataset has a minimum of one HDF5 file (:page_facing_up:, <code>main_data.hdf5</code>). In the dataset file,  the collected transitions are separated by episode groups (:file_folder:) that contain 5 required datasets(:floppy_disk:) : <code>observations</code>, <code>actions</code>, <code>terminations</code>, <code>truncations</code>, and <code>rewards</code>. Other optional group and dataset collections can be included in each episode; such is the case of the <code>infos</code> step return. This structure allows us to store <a href="https://minari.farama.org/main/content/dataset_standards/#default-dataset-metadata" rel="nofollow">metadata</a> for each episode.</p>
 <p>📄 main_data.hdf5<br>
 ├ 📁 episode_id<br>
 │   ├ 💾 observations<br>
