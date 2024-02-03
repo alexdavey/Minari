@@ -245,6 +245,7 @@
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../../tutorials/using_datasets/">Using Datasets</a><input class="toctree-checkbox" id="toctree-checkbox-4" name="toctree-checkbox-4" role="switch" type="checkbox"/><label for="toctree-checkbox-4"><div class="visually-hidden">Toggle navigation of Using Datasets</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/using_datasets/behavioral_cloning/">Behavioral cloning with PyTorch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tutorials/using_datasets/IQL_torchrl/">Implicit Q-Learning with TorchRL</a></li>
 </ul>
 </li>
 </ul>
@@ -626,7 +627,7 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_total_steps</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">storage</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
-                        <span class="k">lambda</span> <span class="n">episode</span><span class="p">:</span> <span class="n">episode</span><span class="p">[</span><span class="s2">&quot;total_timesteps&quot;</span><span class="p">],</span>
+                        <span class="k">lambda</span> <span class="n">episode</span><span class="p">:</span> <span class="n">episode</span><span class="p">[</span><span class="s2">&quot;total_steps&quot;</span><span class="p">],</span>
                         <span class="n">episode_indices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">episode_indices</span><span class="p">,</span>
                     <span class="p">)</span>
                 <span class="p">)</span>
