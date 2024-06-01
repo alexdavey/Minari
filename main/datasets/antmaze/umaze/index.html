@@ -220,19 +220,22 @@
   <p class="caption" role="heading"><span class="caption-text">Introduction</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/basic_usage/">Basic Usage</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../content/dataset_standards/">Dataset Standards</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../content/minari_cli/">Minari CLI</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../content/dataset_standards/">Dataset Standards</a></li>
 </ul>
 <p class="caption" role="heading"><span class="caption-text">API</span></p>
 <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/minari_functions/">Minari</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of Minari</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/minari_dataset/minari_dataset/">MinariDataset</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/minari_dataset/minari_storage/">MinariStorage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../api/minari_dataset/episode_data/">EpisodeData</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/minari_dataset/step_data/">StepData</a></li>
 </ul>
 </li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../api/data_collector/">DataCollector</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" role="switch" type="checkbox"/><label for="toctree-checkbox-2"><div class="visually-hidden">Toggle navigation of DataCollector</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/data_collector_callbacks/step_data_callback/">StepDataCallback</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../api/data_collector_callbacks/episode_metadata_callback/">EpisodeMetadataCallback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/data_collector/episode_buffer/">EpisodeBuffer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/data_collector/step_data_callback/">StepDataCallback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../api/data_collector/episode_metadata_callback/">EpisodeMetadataCallback</a></li>
 </ul>
 </li>
 </ul>
@@ -360,7 +363,7 @@
             
             <section class="tex2jax_ignore mathjax_ignore" id="umaze">
 <h1>Umaze<a class="headerlink" href="#umaze" title="Link to this heading">¶</a></h1>
-<img src="https://storage.googleapis.com/minari-datasets/antmaze-umaze-v1/_docs/_imgs/antmaze-umaze-v1.gif" width="200" style="display: block; margin:0 auto"/>
+<img src="/datasets/gifs/antmaze-umaze-v1.gif" width="200" style="display: block; margin:0 auto"/>
 <section id="description">
 <h2>Description<a class="headerlink" href="#description" title="Link to this heading">¶</a></h2>
 <p>The data is collected from the <a class="reference external" href="https://robotics.farama.org/envs/maze/ant_maze/"><code class="docutils literal notranslate"><span class="pre">AntMaze_UMaze-v4</span></code></a> environment, which contains a U shape maze. Every episode has the same fixed goal and reset locations. The success rate of all the trajectories is more than 90%, failed trajectories occur because the Ant flips and can’t stand up again. Also note that when the Ant reaches the goal the episode doesn’t terminate or generate a new target leading to a reward accumulation. The Ant reaches the goals by following a set of waypoints using a goal-reaching policy trained using SAC.</p>
@@ -403,7 +406,7 @@
 <td><p><code class="docutils literal notranslate"><span class="pre">~=0.4</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>Download</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">minari.download_dataset(&quot;antmaze-umaze-v1&quot;)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">minari</span> <span class="pre">download</span> <span class="pre">antmaze-umaze-v1</span></code></p></td>
 </tr>
 </tbody>
 </table>
