@@ -2,6 +2,7 @@ import pytest
 
 import minari
 from minari import MinariDataset
+from minari.dataset.minari_dataset import gen_dataset_id
 from minari.storage.datasets_root_dir import get_dataset_path
 from minari.storage.hosting import get_remote_dataset_versions
 from tests.common import check_data_integrity
@@ -10,20 +11,23 @@ from tests.common import check_data_integrity
 env_names = ["pen", "door", "hammer", "relocate"]
 
 
-def get_latest_compatible_dataset_id(env_name, dataset_name):
+def get_latest_compatible_dataset_id(namespace, env_name, dataset_name):
     latest_compatible_version = get_remote_dataset_versions(
+        namespace=namespace,
         dataset_name=dataset_name,
         env_name=env_name,
         latest_version=True,
         compatible_minari_version=True,
     )[0]
-    return f"{env_name}-{dataset_name}-v{latest_compatible_version}"
+    return gen_dataset_id(namespace, env_name, dataset_name, latest_compatible_version)
 
 
 @pytest.mark.parametrize(
     "dataset_id",
     [
-        get_latest_compatible_dataset_id(env_name=env_name, dataset_name="human")
+        get_latest_compatible_dataset_id(
+            namespace=None, env_name=env_name, dataset_name="human"
+        )
         for env_name in env_names
     ],
 )
@@ -66,7 +70,9 @@ def test_download_dataset_from_farama_server(dataset_id: str):
 @pytest.mark.parametrize(
     "dataset_id",
     [
-        get_latest_compatible_dataset_id(env_name=env_name, dataset_name="human")
+        get_latest_compatible_dataset_id(
+            namespace=None, env_name=env_name, dataset_name="human"
+        )
         for env_name in env_names
     ],
 )
@@ -112,6 +118,7 @@ def test_download_error_messages(monkeypatch):
     # 4. Check that the dataset version is compatible with the local installed Minari version
     def patch_get_remote_dataset_versions(versions):
         def patched_get_remote(
+            namespace,
             env_name,
             dataset_name,
             latest_version=False,
@@ -156,7 +163,7 @@ def test_download_error_messages(monkeypatch):
 
     # Skip datasets that exist locally
     latest_door_human_id = get_latest_compatible_dataset_id(
-        env_name="door", dataset_name="human"
+        namespace=None, env_name="door", dataset_name="human"
     )
     minari.download_dataset(latest_door_human_id)
 

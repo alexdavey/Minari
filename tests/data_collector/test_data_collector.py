@@ -2,11 +2,18 @@ import gymnasium as gym
 import numpy as np
 import pytest
 
-from minari import DataCollector, EpisodeData, MinariDataset, StepDataCallback
+from minari import (
+    DataCollector,
+    EpisodeData,
+    MinariDataset,
+    StepDataCallback,
+    load_dataset,
+)
 from minari.dataset._storages import registry as storage_registry
 from tests.common import (
     check_infos_equal,
     check_load_and_delete_dataset,
+    dummy_test_datasets,
     get_info_at_step_index,
 )
 
@@ -91,17 +98,19 @@ def get_single_step_from_episode(episode: EpisodeData, index: int) -> EpisodeDat
     return EpisodeData(**step_data)
 
 
+# TODO: Confirm that this is the same
+# @pytest.mark.parametrize(
+#     "dataset_id,env_id",
+#     [
+#         ("dummy-dict-test-v0", "DummyDictEnv-v0"),
+#         ("dummy-box-test-v0", "DummyBoxEnv-v0"),
+#         ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
+#         ("dummy-combo-test-v0", "DummyComboEnv-v0"),
+#         ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
+#     ],
+# )
 @pytest.mark.parametrize("data_format", storage_registry.keys())
-@pytest.mark.parametrize(
-    "dataset_id,env_id",
-    [
-        ("dummy-dict-test-v0", "DummyDictEnv-v0"),
-        ("dummy-box-test-v0", "DummyBoxEnv-v0"),
-        ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
-        ("dummy-combo-test-v0", "DummyComboEnv-v0"),
-        ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
-    ],
-)
+@pytest.mark.parametrize("dataset_id,env_id", dummy_test_datasets)
 def test_truncation_without_reset(dataset_id, env_id, data_format, register_dummy_envs):
     """Test new episode creation when environment is truncated and env.reset is not called."""
     num_steps = 50
@@ -152,6 +161,46 @@ def test_truncation_without_reset(dataset_id, env_id, data_format, register_dumm
 
     # check load and delete local dataset
     check_load_and_delete_dataset(dataset_id)
+
+
+# TODO: Need to work out how to add metadata
+
+# @pytest.mark.parametrize(
+#     "dataset_id,env_id,created_dataset_id",
+#     [
+#         (
+#             "/example_namespace/dummy-dict-test-v0",
+#             "DummyDictEnv-v0",
+#             "example_namespace/dummy-dict-test-v0",
+#         ),
+#         ("/dummy-dict-test-v0", "DummyDictEnv-v0", "dummy-dict-test-v0"),
+#     ],
+# )
+# def test_create_dataset_namespace(dataset_id, env_id, created_dataset_id):
+#     """Test that namespace={"/", ""} are equivalent when creating new datasets."""
+#     num_steps = 50
+#     env = gym.make(env_id, max_episode_steps=50)
+#     env = DataCollector(
+#         env,
+#         step_data_callback=ForceTruncateStepDataCallback,
+#         record_infos=True,
+#     )
+
+#     env.reset()
+#     for _ in range(num_steps):
+#         env.step(env.action_space.sample())
+
+#     env.create_dataset(
+#         dataset_id=dataset_id,
+#         algorithm_name="random_policy",
+#         author="Farama",
+#         author_email="farama@farama.org",
+#     )
+
+#     env.close()
+
+#     load_dataset(dataset_id)
+#     check_load_and_delete_dataset(created_dataset_id)
 
 
 @pytest.mark.parametrize("data_format", storage_registry.keys())

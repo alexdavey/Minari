@@ -11,13 +11,17 @@ Minari stores the offline datasets under a common root directory. The root direc
 
 The remote datasets are kept in the public Google Cloud Platform (GCP) bucket [`minari-datasets`](https://console.cloud.google.com/storage/browser/minari-datasets;tab=objects?forceOnBucketsSortingFiltering=false&project=mcmes-345620&prefix=&forceOnObjectsSortingFiltering=false).
 
-The first level of the root directory tree contains the Minari dataset directories, which are named after the datasets `id`. The datasets `id` must follow the syntax `(env_name-)(dataset_name)(-v(version))`, where:
+Minari dataset directories, are named after the datasets `id`. The datasets `id` must follow the syntax `(namespace/)(env_name-)(dataset_name)(-v(version))`, where:
 
+- `namespace`: an optional string that allows grouping of several datasets under a common subdirectory. If no namespace is specified, the dataset is stored in the top level directory and the dataset `id` takes the form `(env_name-)(dataset_name)(-v(version))`, with no leading forward slash.
 - `env_name`: a string that describes the environment from which the dataset was created. For example, if a dataset comes from the [`AdroitHandDoor`](https://robotics.farama.org/envs/adroit_hand/adroit_door/) environment `env_name` can be equal to `door`.
 - `dataset_name`: a string describing the content of the dataset. For example, if the dataset for the `AdroitHandDoor` environment was generated from human input we can give the value `human` to `dataset_name`.
 - `version`: integer value that represent the number of versions for `door-human-v(version)` dataset, starting from `0`.
 
-In the end, the `id` of the dataset for the initial version of the `AdroitHandDoor` environment example will be `door-human-v0`.
+In the end, the `id` of the dataset for the initial version of the `AdroitHandDoor` environment example, with no namespace, will be `door-human-v0`. If the dataset was created with a namespace, for example `D4RL`, the dataset `id` would instead be `D4RL/door-human-v0`.
+
+Minari dataset directories are stored in the root directory (`~/.minari/datasets/` by default) or in a subdirectory corresponding to the namespace of the dataset if a namespace is specified.
+
 
 ```{eval-rst}
 Each Minari dataset directory contains another directory named `data` where the data files are stored. We currently support two files format: Arrow and HDF5. You can choose the file format when you create the dataset (see :class:`minari.DataCollector` and :func:`minari.create_dataset_from_buffers`).

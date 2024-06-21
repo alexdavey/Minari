@@ -1,8 +1,13 @@
+import copy
 import tempfile
 
 import pytest
 from gymnasium import register, registry
 from pytest import MonkeyPatch
+
+# Note: Use minari.list_remote_datasets instead of named importing list_remote_datasets
+# directly in tests, as it will evade monkeypatch
+from minari.storage.hosting import list_remote_datasets as unmocked_list_remote_datasets
 
 
 @pytest.fixture(autouse=True)
@@ -39,3 +44,28 @@ def register_dummy_envs():
 
     for env_name in env_names:
         registry.pop(f"{env_name}-v0")
+
+
+def mocked_list_remote(*args, **kwargs):
+    results = unmocked_list_remote_datasets(*args, **kwargs)
+
+    num_mocked_datasets = 2
+    mocked_namespace = "example_namespace"
+
+    for i in range(num_mocked_datasets):
+        dataset_id, dataset = list(results.items())[i]
+        new_id = f"{mocked_namespace}/{dataset_id}"
+        new_dataset = copy.deepcopy(dataset)
+        new_dataset["dataset_id"] = new_id
+        results[new_id] = new_dataset
+
+    return results
+
+
+@pytest.fixture
+def mock_namespaces(monkeypatch):
+    # Need to patch all possible paths to the function
+    monkeypatch.setattr("minari.list_remote_datasets", mocked_list_remote)
+    monkeypatch.setattr(
+        "minari.storage.hosting.list_remote_datasets", mocked_list_remote
+    )

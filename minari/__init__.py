@@ -3,6 +3,15 @@ from minari.data_collector.callbacks import EpisodeMetadataCallback, StepDataCal
 from minari.dataset.episode_data import EpisodeData
 from minari.dataset.minari_dataset import MinariDataset
 from minari.dataset.step_data import StepData
+
+# TODO: Add the rest
+# TODO: Add to all
+from minari.namespace import (
+    create_namespace,
+    delete_namespace,
+    load_namespace_data,
+    update_namespace,
+)
 from minari.storage.hosting import (
     download_dataset,
     list_remote_datasets,

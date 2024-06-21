@@ -1,16 +1,17 @@
 import gymnasium as gym
 import numpy as np
 
-import minari
+# import minari
 from minari import get_normalized_score
 from minari.data_collector.data_collector import DataCollector
 from tests.common import create_dummy_dataset_with_collecter_env_helper
 
 
 def test_ref_score():
-    local_datasets = minari.list_local_datasets()
-    if "cartpole-test-v0" in local_datasets:
-        minari.delete_dataset("cartpole-test-v0")
+    # TODO: Check that we can remove this
+    # local_datasets = minari.list_local_datasets()
+    # if "cartpole-test-v0" in local_datasets:
+    #     minari.delete_dataset("cartpole-test-v0")
 
     env = gym.make("CartPole-v1")
 

@@ -9,7 +9,7 @@ from tests.dataset.test_dataset_download import get_latest_compatible_dataset_id
 runner = CliRunner()
 
 
-def test_list_app():
+def test_list_app(mock_namespaces):
     result = runner.invoke(app, ["list", "local", "--all"])
     assert result.exit_code == 0
     # some of the other columns may be cut off by Rich
@@ -18,11 +18,16 @@ def test_list_app():
     result = runner.invoke(app, ["list", "remote"])
     assert result.exit_code == 0
     assert "Minari datasets in Farama server" in result.stdout
+    assert "example_namespace" in result.stdout
 
 
 @pytest.mark.parametrize(
     "dataset_id",
-    [get_latest_compatible_dataset_id(env_name="pen", dataset_name="human")],
+    [
+        get_latest_compatible_dataset_id(
+            namespace=None, env_name="pen", dataset_name="human"
+        )
+    ],
 )
 def test_dataset_download_then_delete(dataset_id: str):
     """Test download dataset invocation from CLI.

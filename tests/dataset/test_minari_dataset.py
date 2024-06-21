@@ -11,13 +11,17 @@ import minari
 from minari import DataCollector, EpisodeData, MinariDataset, StepData
 from minari.data_collector.episode_buffer import EpisodeBuffer
 from minari.dataset._storages import registry as storage_registry
+from minari.dataset.minari_dataset import gen_dataset_id, parse_dataset_id
 from minari.dataset.minari_storage import METADATA_FILE_NAME
 from tests.common import (
+    cartpole_test_dataset,
     check_data_integrity,
     check_env_recovery,
     check_episode_data_integrity,
     check_load_and_delete_dataset,
     create_dummy_dataset_with_collecter_env_helper,
+    dummy_test_datasets,
+    register_dummy_envs,
     test_spaces,
 )
 
@@ -57,18 +61,22 @@ def test_episode_data(space: gym.Space):
     assert re.fullmatch(pattern, repr(episode_data))
 
 
-@pytest.mark.parametrize(
-    "dataset_id,env_id",
-    [
-        ("cartpole-test-v0", "CartPole-v1"),
-        ("dummy-dict-test-v0", "DummyDictEnv-v0"),
-        ("dummy-box-test-v0", "DummyBoxEnv-v0"),
-        ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
-        ("dummy-combo-test-v0", "DummyComboEnv-v0"),
-        ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
-    ],
-)
+# TODO: Check that it's the same datasets
+# @pytest.mark.parametrize(
+#     "dataset_id,env_id",
+#     [
+#         ("cartpole-test-v0", "CartPole-v1"),
+#         ("dummy-dict-test-v0", "DummyDictEnv-v0"),
+#         ("dummy-box-test-v0", "DummyBoxEnv-v0"),
+#         ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
+#         ("dummy-combo-test-v0", "DummyComboEnv-v0"),
+#         ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
+#     ],
+# )
 @pytest.mark.parametrize("data_format", storage_registry.keys())
+@pytest.mark.parametrize(
+    "dataset_id,env_id", cartpole_test_dataset + dummy_test_datasets
+)
 def test_update_dataset_from_collector_env(
     dataset_id, env_id, data_format, register_dummy_envs
 ):
@@ -113,17 +121,19 @@ def test_update_dataset_from_collector_env(
     check_load_and_delete_dataset(dataset_id)
 
 
-@pytest.mark.parametrize(
-    "dataset_id,env_id",
-    [
-        ("dummy-dict-test-v0", "DummyDictEnv-v0"),
-        ("dummy-box-test-v0", "DummyBoxEnv-v0"),
-        ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
-        ("dummy-combo-test-v0", "DummyComboEnv-v0"),
-        ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
-    ],
-)
+# TODO: Check that the dataset is the same
+# @pytest.mark.parametrize(
+#     "dataset_id,env_id",
+#     [
+#         ("dummy-dict-test-v0", "DummyDictEnv-v0"),
+#         ("dummy-box-test-v0", "DummyBoxEnv-v0"),
+#         ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
+#         ("dummy-combo-test-v0", "DummyComboEnv-v0"),
+#         ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
+#     ],
+# )
 @pytest.mark.parametrize("data_format", storage_registry.keys())
+@pytest.mark.parametrize("dataset_id,env_id", dummy_test_datasets)
 def test_filter_episodes_and_subsequent_updates(
     dataset_id, env_id, data_format, register_dummy_envs
 ):
@@ -277,18 +287,22 @@ def test_filter_episodes_and_subsequent_updates(
     env.close()
 
 
-@pytest.mark.parametrize(
-    "dataset_id,env_id",
-    [
-        ("cartpole-test-v0", "CartPole-v1"),
-        ("dummy-dict-test-v0", "DummyDictEnv-v0"),
-        ("dummy-box-test-v0", "DummyBoxEnv-v0"),
-        ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
-        ("dummy-combo-test-v0", "DummyComboEnv-v0"),
-        ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
-    ],
-)
+# TODO: Check that the dataset is the same
+# @pytest.mark.parametrize(
+#     "dataset_id,env_id",
+#     [
+#         ("cartpole-test-v0", "CartPole-v1"),
+#         ("dummy-dict-test-v0", "DummyDictEnv-v0"),
+#         ("dummy-box-test-v0", "DummyBoxEnv-v0"),
+#         ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
+#         ("dummy-combo-test-v0", "DummyComboEnv-v0"),
+#         ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
+#     ],
+# )
 @pytest.mark.parametrize("data_format", storage_registry.keys())
+@pytest.mark.parametrize(
+    "dataset_id,env_id", cartpole_test_dataset + dummy_test_datasets
+)
 def test_sample_episodes(dataset_id, env_id, data_format, register_dummy_envs):
     local_datasets = minari.list_local_datasets()
     if dataset_id in local_datasets:
@@ -321,18 +335,22 @@ def test_sample_episodes(dataset_id, env_id, data_format, register_dummy_envs):
     env.close()
 
 
-@pytest.mark.parametrize(
-    "dataset_id, env_id",
-    [
-        ("cartpole-test-v0", "CartPole-v1"),
-        ("dummy-dict-test-v0", "DummyDictEnv-v0"),
-        ("dummy-box-test-v0", "DummyBoxEnv-v0"),
-        ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
-        ("dummy-combo-test-v0", "DummyComboEnv-v0"),
-        ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
-    ],
-)
+# TODO: Check the datasets are the same
+# @pytest.mark.parametrize(
+#     "dataset_id, env_id",
+#     [
+#         ("cartpole-test-v0", "CartPole-v1"),
+#         ("dummy-dict-test-v0", "DummyDictEnv-v0"),
+#         ("dummy-box-test-v0", "DummyBoxEnv-v0"),
+#         ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
+#         ("dummy-combo-test-v0", "DummyComboEnv-v0"),
+#         ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
+#     ],
+# )
 @pytest.mark.parametrize("data_format", storage_registry.keys())
+@pytest.mark.parametrize(
+    "dataset_id,env_id", cartpole_test_dataset + dummy_test_datasets
+)
 def test_iterate_episodes(dataset_id, env_id, data_format, register_dummy_envs):
     local_datasets = minari.list_local_datasets()
     if dataset_id in local_datasets:
@@ -370,18 +388,22 @@ def test_iterate_episodes(dataset_id, env_id, data_format, register_dummy_envs):
     assert len(dataset) == 10
 
 
-@pytest.mark.parametrize(
-    "dataset_id,env_id",
-    [
-        ("cartpole-test-v0", "CartPole-v1"),
-        ("dummy-dict-test-v0", "DummyDictEnv-v0"),
-        ("dummy-box-test-v0", "DummyBoxEnv-v0"),
-        ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
-        ("dummy-combo-test-v0", "DummyComboEnv-v0"),
-        ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
-    ],
-)
+# TODO: Check that the datasets are the same
+# @pytest.mark.parametrize(
+#     "dataset_id,env_id",
+#     [
+#         ("cartpole-test-v0", "CartPole-v1"),
+#         ("dummy-dict-test-v0", "DummyDictEnv-v0"),
+#         ("dummy-box-test-v0", "DummyBoxEnv-v0"),
+#         ("dummy-tuple-test-v0", "DummyTupleEnv-v0"),
+#         ("dummy-combo-test-v0", "DummyComboEnv-v0"),
+#         ("dummy-tuple-discrete-box-test-v0", "DummyTupleDiscreteBoxEnv-v0"),
+#     ],
+# )
 @pytest.mark.parametrize("data_format", storage_registry.keys())
+@pytest.mark.parametrize(
+    "dataset_id,env_id", cartpole_test_dataset + dummy_test_datasets
+)
 def test_update_dataset_from_buffer(
     dataset_id, env_id, data_format, register_dummy_envs
 ):
@@ -477,3 +499,28 @@ def test_missing_env_module(data_format):
         dataset.recover_environment()
 
     minari.delete_dataset(dataset_id)
+
+
+@pytest.mark.parametrize(
+    "dataset_id",
+    [x[0] for x in dummy_test_datasets]
+    + ["/" + x[0] for x in dummy_test_datasets]
+    + ["namespace/" + x[0] for x in dummy_test_datasets],
+)
+def test_parse_gen_dataset_id_inverse_forward(dataset_id):
+    """Check parse_dataset_id() and gen_dataset_id() are inverses. Forward direction."""
+    namespace, env_name, dataset_name, version = parse_dataset_id(dataset_id)
+    new_dataset_id = gen_dataset_id(namespace, env_name, dataset_name, version)
+
+    # parse_dataset_id() supports leading forward slash, but for backward compatibility
+    # gen_dataset_id() doesn't add one
+    if dataset_id[0] == "/":
+        dataset_id = dataset_id[1:]
+
+    assert new_dataset_id == dataset_id
+
+
+def test_parse_gen_dataset_id_inverse_backward():
+    """Check parse_dataset_id() and gen_dataset_id() are inverses. Backward direction."""
+    dataset_id_attrs = ("aB1-_", "cD2", "eF3:.-_", 456)
+    assert dataset_id_attrs == parse_dataset_id(gen_dataset_id(*dataset_id_attrs))

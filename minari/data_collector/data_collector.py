@@ -15,8 +15,9 @@ from gymnasium.envs.registration import EnvSpec
 
 from minari.data_collector.callbacks import EpisodeMetadataCallback, StepDataCallback
 from minari.data_collector.episode_buffer import EpisodeBuffer
-from minari.dataset.minari_dataset import MinariDataset
+from minari.dataset.minari_dataset import MinariDataset, parse_dataset_id
 from minari.dataset.minari_storage import MinariStorage
+from minari.namespace import create_namespace
 from minari.utils import _generate_dataset_metadata, _generate_dataset_path
 
 
@@ -46,7 +47,7 @@ class DataCollector(gym.Wrapper):
             if terminated or truncated:
                 env.reset()
 
-        dataset = env.create_dataset(dataset_id="env_name-dataset_name-v(version)", **kwargs)
+        dataset = env.create_dataset(dataset_id="namespace/env_name-dataset_name-v(version)", **kwargs)
 
     Some of the characteristics of this wrapper:
 
@@ -224,6 +225,8 @@ class DataCollector(gym.Wrapper):
 
         self._reset_storage()
 
+    # TODO: Update docs
+    # TODO: Update tests
     def create_dataset(
         self,
         dataset_id: str,
@@ -238,11 +241,12 @@ class DataCollector(gym.Wrapper):
         num_episodes_average_score: int = 100,
         minari_version: Optional[str] = None,
         description: Optional[str] = None,
+        namespace_description: Optional[str] = None,
     ):
         """Create a Minari dataset using the data collected from stepping with a Gymnasium environment wrapped with a `DataCollector` Minari wrapper.
 
         The ``dataset_id`` parameter corresponds to the name of the dataset, with the syntax as follows:
-        ``(env_name-)(dataset_name)(-v(version))`` where ``env_name`` identifies the name of the environment used to generate the dataset ``dataset_name``.
+        ``(namespace/)(env_name-)(dataset_name)(-v(version))`` where ``env_name`` identifies the name of the environment used to generate the dataset ``dataset_name``. The `namespace` (and leading forward slash) is optional.
         This ``dataset_id`` is used to load the Minari datasets with :meth:`minari.load_dataset`.
 
         Args:
@@ -261,10 +265,14 @@ class DataCollector(gym.Wrapper):
             num_episodes_average_score (int): number of episodes to average over the returns to compute `ref_min_score` and `ref_max_score`. Default to 100.
             minari_version (Optional[str], optional): Minari version specifier compatible with the dataset. If None (default) use the installed Minari version.
             description (Optional[str], optional): description of the dataset being created. Defaults to None.
+            namespace_description (Optional[str], optional): description of the dataset's namespace. Defaults to None.
 
         Returns:
             MinariDataset
         """
+        namespace = parse_dataset_id(dataset_id)[0]
+        create_namespace(namespace, namespace_description)
+
         dataset_path = _generate_dataset_path(dataset_id)
         metadata: Dict[str, Any] = _generate_dataset_metadata(
             dataset_id,
